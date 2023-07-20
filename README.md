@@ -9,4 +9,4 @@ A tracking app for roommates to easily organize their housework and errands.
 * JWT
 
 ### Current ERD (in progress)
-![ERD](docs/ERD.png)
+![](docs/erd.png)
