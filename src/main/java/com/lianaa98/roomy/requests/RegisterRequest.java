@@ -1,6 +1,6 @@
 package com.lianaa98.roomy.requests;
 
-public class UserRequest {
+public class RegisterRequest {
     public String firstName;
     public String lastName;
     public String email;

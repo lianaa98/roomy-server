@@ -10,4 +10,9 @@ public class PasswordUtils {
         System.out.println(passwordHash);
         return passwordHash;
     }
+
+    public static Boolean matchPassword(String password, String passwordHash) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(password, passwordHash);
+    }
 }
