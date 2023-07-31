@@ -55,13 +55,19 @@ public class UserController {
 
         String token = jwtUtils.generateToken(user.username);
 
-        return ok(token);
+        return ok().header("Authorization", "Bearer " + token ).body(user);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
+            @RequestHeader(value = "Authorization", required = false) String jwt,
             @RequestBody LoginRequest loginRequest
     ) {
+
+        if (jwt != null) {
+            return forbidden("already logged in");
+        }
+
         User user = userRepository.findByUsername(loginRequest.username);
 
         if (user == null) {
@@ -69,7 +75,8 @@ public class UserController {
         }
 
         if (matchPassword(loginRequest.password, user.passwordHash)) {
-            return ok(user);
+            String token = jwtUtils.generateToken(user.username);
+            return ok().header("Authorization", "Bearer " + token ).body(user);
         }
 
         return unauthorized();

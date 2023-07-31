@@ -3,6 +3,7 @@ package com.lianaa98.roomy.common;
 import org.springframework.http.ResponseEntity;
 
 public class Status {
+
     public static ResponseEntity<?> created() {
         return ResponseEntity.status(201).build();
     }
