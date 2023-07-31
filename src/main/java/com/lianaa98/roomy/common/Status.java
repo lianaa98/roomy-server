@@ -3,11 +3,6 @@ package com.lianaa98.roomy.common;
 import org.springframework.http.ResponseEntity;
 
 public class Status {
-
-    public static ResponseEntity<?> ok() {
-        return ResponseEntity.ok().build();
-    }
-
     public static ResponseEntity<?> created() {
         return ResponseEntity.status(201).build();
     }
@@ -28,8 +23,8 @@ public class Status {
         return ResponseEntity.status(404).build();
     }
 
-    public static ResponseEntity<?> conflict() {
-        return ResponseEntity.status(409).build();
+    public static ResponseEntity<?> conflict(String message) {
+        return ResponseEntity.status(409).body(message);
     }
 
 }

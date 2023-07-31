@@ -4,6 +4,7 @@ import com.lianaa98.roomy.models.User;
 import com.lianaa98.roomy.repositories.UserRepository;
 import com.lianaa98.roomy.requests.LoginRequest;
 import com.lianaa98.roomy.requests.RegisterRequest;
+import com.lianaa98.roomy.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.lianaa98.roomy.common.Status.notFound;
-import static com.lianaa98.roomy.common.Status.unauthorized;
+import static com.lianaa98.roomy.common.Status.*;
 import static com.lianaa98.roomy.utils.PasswordUtils.hashPassword;
 import static com.lianaa98.roomy.utils.PasswordUtils.matchPassword;
 import static org.springframework.http.ResponseEntity.ok;
@@ -23,15 +23,25 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @GetMapping("/users/all")
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @PostMapping("/register")
-    public User register(
+    public ResponseEntity<?> register(
             @RequestBody RegisterRequest registerRequest
     ) {
+
+        // if email or username already exists, throw conflict
+        if (userRepository.findByEmail(registerRequest.email) != null
+                || userRepository.findByUsername(registerRequest.username) != null) {
+            return conflict("Email or username already exists");
+        }
+
         User user = new User();
         user.firstName = registerRequest.firstName;
         user.lastName = registerRequest.lastName;
@@ -39,7 +49,11 @@ public class UserController {
         user.username = registerRequest.username;
         user.passwordHash = hashPassword(registerRequest.password);
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        String token = jwtUtils.generateToken(user.username);
+
+        return ok(token);
     }
 
     @PostMapping("/login")
