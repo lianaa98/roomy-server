@@ -15,8 +15,8 @@ public class Status {
         return ResponseEntity.status(401).build();
     }
 
-    public static ResponseEntity<?> forbidden() {
-        return ResponseEntity.status(403).build();
+    public static ResponseEntity<?> forbidden(String message) {
+        return ResponseEntity.status(403).body(message);
     }
 
     public static ResponseEntity<?> notFound() {

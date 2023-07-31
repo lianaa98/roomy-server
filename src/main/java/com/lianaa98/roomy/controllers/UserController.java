@@ -7,10 +7,7 @@ import com.lianaa98.roomy.requests.RegisterRequest;
 import com.lianaa98.roomy.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.lianaa98.roomy.common.Status.*;
 import static com.lianaa98.roomy.utils.PasswordUtils.hashPassword;
@@ -33,8 +30,13 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
+            @RequestHeader(value = "Authorization", required = false) String jwt,
             @RequestBody RegisterRequest registerRequest
     ) {
+
+        if (jwt != null) {
+            return forbidden("already logged in");
+        }
 
         // if email or username already exists, throw conflict
         if (userRepository.findByEmail(registerRequest.email) != null
