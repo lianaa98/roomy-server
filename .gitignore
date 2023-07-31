@@ -3,3 +3,4 @@ NOTES.md
 target/
 .idea
 .DS_Store
+application-local.properties
