@@ -1,5 +1,7 @@
 package com.lianaa98.roomy.utils;
 
+import com.lianaa98.roomy.models.User;
+import com.lianaa98.roomy.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
@@ -39,7 +44,8 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String extractUsername(String token) {
+    public String extractUsername(String jwt) {
+        String token = jwt.substring(7);
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
@@ -55,8 +61,17 @@ public class JwtUtils {
                 .getExpiration()
                 .before(new Date());
     }
-    public Boolean validateToken(String token) {
+    public Boolean validateToken(String jwt) {
+        String token = jwt.substring(7);
         return !isTokenExpired(token);
+    }
+
+    public User getUserFromToken(String jwt) {
+        if (!validateToken(jwt)) {
+            return null;
+        }
+        String username = extractUsername(jwt);
+        return userRepository.findByUsername(username);
     }
 
 }

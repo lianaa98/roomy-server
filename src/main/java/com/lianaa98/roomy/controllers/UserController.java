@@ -82,4 +82,11 @@ public class UserController {
         return unauthorized();
     }
 
+    @GetMapping("/verifyUser")
+    public ResponseEntity<?> verifyToken(
+            @RequestHeader(value = "Authorization") String jwt
+    ) {
+        return ok().body(jwtUtils.getUserFromToken(jwt));
+    }
+
 }
