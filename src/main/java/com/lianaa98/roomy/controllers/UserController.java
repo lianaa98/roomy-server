@@ -55,7 +55,7 @@ public class UserController {
 
         String token = jwtUtils.generateToken(user.username);
 
-        return ok().header("Authorization", "Bearer " + token ).body(user);
+        return ok().body(token);
     }
 
     @PostMapping("/login")
@@ -76,7 +76,7 @@ public class UserController {
 
         if (matchPassword(loginRequest.password, user.passwordHash)) {
             String token = jwtUtils.generateToken(user.username);
-            return ok().header("Authorization", "Bearer " + token ).body(user);
+            return ok().body(token);
         }
 
         return unauthorized();
