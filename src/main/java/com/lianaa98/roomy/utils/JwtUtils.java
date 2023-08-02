@@ -33,8 +33,12 @@ public class JwtUtils {
     }
 
     public String generateToken(String username) {
+        User user = userRepository.findByUsername(username);
+        Long id = user.getId();
+
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", username);
+
+        claims.put("userId", userRepository.findByUsername(username).getId());
         claims.put("created", new Date());
 
         return Jwts.builder()
@@ -44,13 +48,13 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String extractUsername(String jwt) {
+    public Long extractUserId(String jwt) {
         String token = jwt.substring(7);
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("username", String.class);
+                .get("userId", Long.class);
     }
 
     public Boolean isTokenExpired(String token) {
@@ -70,8 +74,8 @@ public class JwtUtils {
         if (!validateToken(jwt)) {
             return null;
         }
-        String username = extractUsername(jwt);
-        return userRepository.findByUsername(username);
+        Long userId = extractUserId(jwt);
+        return userRepository.findById(userId).orElse(null);
     }
 
 }

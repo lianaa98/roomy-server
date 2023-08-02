@@ -24,4 +24,7 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     public String passwordHash;
 
+    public Long getId() {
+        return id;
+    }
 }

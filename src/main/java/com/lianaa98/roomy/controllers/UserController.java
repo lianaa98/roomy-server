@@ -86,6 +86,7 @@ public class UserController {
     public ResponseEntity<?> verifyToken(
             @RequestHeader(value = "Authorization") String jwt
     ) {
+        System.out.println(jwtUtils.getUserFromToken(jwt));
         if (jwtUtils.getUserFromToken(jwt) == null) {
             return unauthorized();
         }
