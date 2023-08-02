@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 public interface LocationRepository extends CrudRepository<Location, Long> {
     Location findByName(String name);
 
+    Location findBySpaceIdAndName(Long spaceId, String name);
+
 //    @Query(
 //            value = "SELECT * FROM locations l " +
 //                    "JOIN spaces s ON l.space_id = s.id " +
