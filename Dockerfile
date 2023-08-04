@@ -5,7 +5,7 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package -P production
 
 # Package stage
-FROM openjdk:11-jre-slim
+FROM openjdk:22-slim
 COPY --from=build /home/app/target/roomy-0.0.1-SNAPSHOT.jar /usr/local/lib/api.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/usr/local/lib/api.jar"]
