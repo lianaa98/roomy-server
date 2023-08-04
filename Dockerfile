@@ -2,7 +2,7 @@
 FROM maven:latest AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package -P production
+RUN mvn -f /home/app/pom.xml clean package
 
 # Package stage
 FROM openjdk:11-jre-slim
