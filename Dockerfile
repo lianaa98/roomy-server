@@ -8,4 +8,4 @@ RUN mvn -f /home/app/pom.xml clean package -P production
 FROM openjdk:22-slim
 COPY --from=build /home/app/target/roomy-0.0.1-SNAPSHOT.jar /usr/local/lib/api.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/usr/local/lib/api.jar"]
+ENTRYPOINT ["java","-jar","/usr/local/lib/api.jar","-Dspring.profiles.active=production"]
