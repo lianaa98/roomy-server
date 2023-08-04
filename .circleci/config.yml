@@ -1,0 +1,26 @@
+version: 2.1
+
+jobs:
+  build_and_publish:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+
+    steps:
+      - checkout
+
+      - setup_remote_docker
+
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t $DOCKERHUB_USERNAME/roomy-api:${CIRCLE_SHA1} .
+
+      - run:
+          name: Log into Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
+      - run:
+          name: Push Docker image to Docker Hub
+          command: |
+            docker push $DOCKERHUB_USERNAME/roomy-api:${CIRCLE_SHA1}
