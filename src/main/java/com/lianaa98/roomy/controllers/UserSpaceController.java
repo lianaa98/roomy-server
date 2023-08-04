@@ -31,6 +31,19 @@ public class UserSpaceController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @GetMapping("/spaces")
+    public ResponseEntity<?> getSpaces(
+            @RequestHeader("Authorization") String jwt
+    ) {
+        // validate user
+        User user = jwtUtils.getUserFromToken(jwt);
+        if (user == null) {
+            return unauthorized();
+        }
+
+        return ok(userSpaceRepository.findByUserId(user.id));
+    }
+
     @PostMapping("/spaces")
     public ResponseEntity<?> createSpace(
             @RequestHeader("Authorization") String jwt,
