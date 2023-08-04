@@ -24,3 +24,13 @@ jobs:
           name: Push Docker image to Docker Hub
           command: |
             docker push $DOCKERHUB_USERNAME/roomy-api:${CIRCLE_SHA1}
+
+workflows:
+  build_and_publish:
+    jobs:
+      - build_and_publish:
+          filters:
+            branches:
+              only:
+                - main
+                - development
