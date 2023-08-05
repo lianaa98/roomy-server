@@ -58,7 +58,7 @@ public class LocationController {
         return ok(newLocation);
     }
 
-    @GetMapping("/space/{spaceId}/locations")
+    @GetMapping("/spaces/{spaceId}/locations")
     public ResponseEntity<?> getAllLocationsInUserSpace(
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long spaceId
