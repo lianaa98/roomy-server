@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Objects;
+
 import static com.lianaa98.roomy.common.Status.*;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -55,17 +58,27 @@ public class LocationController {
         return ok(newLocation);
     }
 
-//    @GetMapping("/space/{spaceId}/locations")
-//    public ResponseEntity<?> getAllLocationsInUserSpace(
-//            @RequestHeader("Authorization") String jwt,
-//            @PathVariable Long spaceId
-//    ) {
-//        // validate user
-//        User user = jwtUtils.getUserFromToken(jwt);
-//        if (user == null) {
-//            return unauthorized();
-//        }
-//        return ResponseEntity.ok(locationRepository.findBySpaceIdAndUserId(spaceId, user.id));
-//    }
+    @GetMapping("/space/{spaceId}/locations")
+    public ResponseEntity<?> getAllLocationsInUserSpace(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long spaceId
+    ) {
+        User user = jwtUtils.getUserFromToken(jwt);
+        if (user == null) {
+            return unauthorized();
+        }
 
+        List<Space> spaces = user.spaces;
+
+        Space space = spaces.stream()
+                            .filter(space1 -> space1.id == spaceId)
+                            .findFirst()
+                            .orElse(null);
+
+        if (space == null) {
+            return notFound();
+        }
+
+        return ok(locationRepository.findBySpaceId(spaceId));
+    }
 }

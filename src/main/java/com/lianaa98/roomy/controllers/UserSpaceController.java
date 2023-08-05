@@ -2,25 +2,20 @@ package com.lianaa98.roomy.controllers;
 
 import com.lianaa98.roomy.models.Space;
 import com.lianaa98.roomy.models.User;
-import com.lianaa98.roomy.models.UserSpace;
 import com.lianaa98.roomy.repositories.SpaceRepository;
 import com.lianaa98.roomy.repositories.UserRepository;
-import com.lianaa98.roomy.repositories.UserSpaceRepository;
 import com.lianaa98.roomy.requests.CreateSpaceRequest;
 import com.lianaa98.roomy.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.lianaa98.roomy.common.Status.badRequest;
+import static com.lianaa98.roomy.common.Status.notFound;
 import static com.lianaa98.roomy.common.Status.unauthorized;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 public class UserSpaceController {
-
-    @Autowired
-    private UserSpaceRepository userSpaceRepository;
 
     @Autowired
     private SpaceRepository spaceRepository;
@@ -41,7 +36,9 @@ public class UserSpaceController {
             return unauthorized();
         }
 
-        return ok(userSpaceRepository.findByUserId(user.id));
+        // get user spaces
+        return ok(user.spaces);
+
     }
 
     @PostMapping("/spaces")
@@ -55,17 +52,15 @@ public class UserSpaceController {
             return unauthorized();
         }
 
-        // space name can be duplicated
         // create space
         Space space = new Space();
         space.name = createSpaceRequest.name;
         spaceRepository.save(space);
         // create user space
-        UserSpace userSpace = new UserSpace();
-        userSpace.user = user;
-        userSpace.space = space;
-        userSpaceRepository.save(userSpace);
-        return ok(userSpace);
+        user.spaces.add(space);
+        userRepository.save(user);
+
+        return ok(space);
     }
 
     @DeleteMapping("/spaces/{spaceId}")
@@ -79,16 +74,25 @@ public class UserSpaceController {
             return unauthorized();
         }
 
-        // find user space
-        UserSpace userSpace = userSpaceRepository.findByUserIdAndSpaceId(user.id, spaceId);
-        System.out.println(userSpace);
-        if (userSpace == null) {
-            return badRequest();
+        // validate space
+        Space space = spaceRepository.findById(spaceId).orElse(null);
+        if (space == null) {
+            return notFound();
+        }
+        // check if user exist in space.users
+        User userCheck = space.users.stream()
+                .filter(user1 ->
+                        user1.id.equals(user.id))
+                .findFirst()
+                .orElse(null);
+
+        if (userCheck == null) {
+            return unauthorized();
         }
 
-        // delete user space
-        userSpaceRepository.delete(userSpace);
-        spaceRepository.delete(userSpace.space);
+        // delete space
+        user.spaces.remove(space);
+        spaceRepository.delete(space);
         return ok(null);
     }
 }

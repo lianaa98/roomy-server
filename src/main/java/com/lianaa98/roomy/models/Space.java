@@ -1,6 +1,9 @@
 package com.lianaa98.roomy.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "spaces")
@@ -12,5 +15,9 @@ public class Space {
 
     @Column(name = "name", nullable = false)
     public String name;
+
+    @ManyToMany(mappedBy = "spaces")
+    @JsonIgnoreProperties("spaces")
+    public List<User> users;
 
 }
