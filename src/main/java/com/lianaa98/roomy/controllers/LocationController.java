@@ -53,6 +53,8 @@ public class LocationController {
         Location newLocation = new Location();
         newLocation.name = locationRequest.name;
         newLocation.space = space;
+        newLocation.createdAt = new java.util.Date();
+        newLocation.updatedAt = new java.util.Date();
         locationRepository.save(newLocation);
 
         return ok(newLocation);
