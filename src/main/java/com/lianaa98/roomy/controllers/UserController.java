@@ -50,6 +50,8 @@ public class UserController {
         user.email = registerRequest.email;
         user.username = registerRequest.username;
         user.passwordHash = hashPassword(registerRequest.password);
+        user.createdAt = new java.util.Date();
+        user.updatedAt = new java.util.Date();
 
         userRepository.save(user);
 
