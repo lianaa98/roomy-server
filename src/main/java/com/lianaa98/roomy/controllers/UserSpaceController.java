@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 import static com.lianaa98.roomy.common.Status.notFound;
 import static com.lianaa98.roomy.common.Status.unauthorized;
 import static org.springframework.http.ResponseEntity.ok;
@@ -55,6 +57,8 @@ public class UserSpaceController {
         // create space
         Space space = new Space();
         space.name = createSpaceRequest.name;
+        space.createdAt = new java.util.Date();
+        space.updatedAt = new java.util.Date();
         spaceRepository.save(space);
         // create user space
         user.spaces.add(space);

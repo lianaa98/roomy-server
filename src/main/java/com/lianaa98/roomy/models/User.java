@@ -3,6 +3,8 @@ package com.lianaa98.roomy.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
+import java.security.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -26,6 +28,12 @@ public class User {
 
     @Column(name = "password_hash", nullable = false)
     public String passwordHash;
+
+    @Column(name = "created_at", nullable = false)
+    public Date createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    public Date updatedAt;
 
     @ManyToMany
     @JoinTable(
