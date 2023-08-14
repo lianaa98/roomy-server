@@ -32,6 +32,9 @@ public class OwnedItem {
     @Column(name = "purchased_at")
     public Date purchasedAt;
 
+    @Column(name = "status")
+    public String status;
+
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false)
     public Location location;
