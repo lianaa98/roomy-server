@@ -50,4 +50,22 @@ public class OwnedItemController {
         return ok(ownedItems);
     }
 
+    @GetMapping("/owned_items/{ownedItemId}")
+    public ResponseEntity<?> getOwnedItem(
+            @PathVariable Long ownedItemId,
+            @RequestHeader("Authorization") String jwt
+    ) {
+        // validate user
+        User user = jwtUtils.getUserFromToken(jwt);
+        if (user == null) {
+            return unauthorized();
+        }
+
+        OwnedItem ownedItem = ownedItemRepository.findById(ownedItemId).orElse(null);
+        if (ownedItem == null) {
+            return notFound();
+        }
+        return ok(ownedItem);
+    }
+
 }
