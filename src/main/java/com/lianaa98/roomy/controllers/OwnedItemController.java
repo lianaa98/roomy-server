@@ -91,7 +91,6 @@ public class OwnedItemController {
         if (itemBelongsToSpace == null) {
             return notFound();
         }
-        System.out.println("itemBelongsToSpace: " + itemBelongsToSpace);
         if (!itemBelongsToSpace.users.contains(user)) {
             return unauthorized();
         }
