@@ -10,6 +10,8 @@ import java.util.List;
 @Table(name = "spaces")
 public class Space {
 
+    public Space() {}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
